@@ -16,7 +16,7 @@ const Title = styled.h1`
 
 const Todo = () => {
   const { addTask, removeTask, finishTask } = useTaskActions();
-
+  
   return (
     <Container>
       <Head>
@@ -25,7 +25,7 @@ const Todo = () => {
       </Head>
       <Title>My Todo List</Title>
       <TaskForm onAdd={addTask} />
-      <Task  onFinish={finishTask} onRemove={removeTask} />
+      <Task  onFinish={finishTask} onRemove={removeTask} /> 
     </Container>
   );
 };

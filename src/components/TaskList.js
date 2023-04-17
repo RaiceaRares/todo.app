@@ -1,4 +1,4 @@
-import { useTaskActions } from "../hooks/useTaskActions";
+import useTaskActions from "../hooks/useTaskActions";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -28,14 +28,22 @@ const Text = styled.span`
 `;
 
 const Task = ({ task }) => {
-  const { finishTask, removeTask } = useTaskActions();
+  if (!task) {
+    return null;
+  }
 
-  const handleFinish = () => {
-    finishTask(task.id);
+  const { addTask, removeTask, finishTask } = useTaskActions();
+
+  const handleAddTask = () => {
+    addTask('New task');
   };
 
-  const handleRemove = () => {
-    removeTask(task.id);
+  const handleRemoveTask = (taskId) => {
+    removeTask(taskId);
+  };
+
+  const handleFinishTask = (taskId) => {
+    finishTask(taskId);
   };
 
   return (
@@ -43,11 +51,12 @@ const Task = ({ task }) => {
       <Text isFinished={task.isFinished}>{task.text}</Text>
       <div>
         {!task.isFinished && (
-          <Button variant="primary" onClick={handleFinish}>
+          <Button variant="primary" onClick={() => handleFinishTask(task.id)}>
             Done
           </Button>
         )}
-        <Button onClick={handleRemove}>Remove</Button>
+        <Button onClick={() => handleRemoveTask(task.id)}>Remove</Button>
+        <Button onClick={handleAddTask}>Add Task</Button>
       </div>
     </Container>
   );

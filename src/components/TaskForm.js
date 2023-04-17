@@ -25,31 +25,33 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const TaskForm = ({ onAddTask }) => {
-  const [taskText, setTaskText] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (taskText.trim() === "") return;
-    onAddTask(taskText);
-    setTaskText("");
+
+  const TaskForm = ({ onAddTask }) => {
+    const [taskText, setTaskText] = useState("");
+  
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      if (taskText.trim() === "") return;
+      onAddTask(taskText);
+      setTaskText("");
+    };
+  
+    const handleChange = (event) => {
+      setTaskText(event.target.value);
+    };
+  
+    return (
+      <Form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          placeholder="Add new task"
+          value={taskText}
+          onChange={handleChange}
+        />
+        <Button type="submit">Add</Button>
+      </Form>
+    );
   };
-
-  const handleChange = (event) => {
-    setTaskText(event.target.value);
-  };
-
-  return (
-    <Form onSubmit={handleSubmit}>
-      <Input
-        type="text"
-        placeholder="Add new task"
-        value={taskText}
-        onChange={handleChange}
-      />
-      <Button type="submit">Add</Button>
-    </Form>
-  );
-};
-
-export default TaskForm;
+  
+  export default TaskForm;
