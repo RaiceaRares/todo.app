@@ -1,25 +1,26 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 
 import taskReducer from '../store/reducers';
-import TaskList from '../components/TaskList';
-import TaskForm from '../components/TaskForm';
+import Todo from './index'
 import GlobalStyle from '../styles/globalStyles';
 
-import { configureStore } from '@reduxjs/toolkit';
-
-const store = configureStore({
-  reducer: {
-    tasks: taskReducer,
-  },
+const rootReducer = combineReducers({
+  tasks: taskReducer,
 });
 
-function App() {
+export type RootState = ReturnType<typeof rootReducer>;
+
+const store = configureStore({
+  reducer: rootReducer,
+});
+
+function App(): JSX.Element {
   return (
     <Provider store={store}>
       <GlobalStyle />
-      <TaskForm />
-      <TaskList />
+      <Todo/>
     </Provider>
   );
 }

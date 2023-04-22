@@ -20,5 +20,9 @@
     "react-redux": "^8.0.5",
     "styled-components": "^5.3.9",
     "tailwindcss": "3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "18.15.13",
+    "typescript": "5.0.4"
   }
 }

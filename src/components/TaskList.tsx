@@ -1,5 +1,7 @@
+import React from 'react';
 import useTaskActions from "../hooks/useTaskActions";
 import styled from "styled-components";
+import { TaskProps } from "./TaskProps";
 
 const Container = styled.div`
   display: flex;
@@ -11,7 +13,11 @@ const Container = styled.div`
   margin-bottom: 10px;
 `;
 
-const Button = styled.button`
+interface ButtonProps {
+  variant?: "primary" | "danger";
+}
+
+const Button = styled.button<ButtonProps>`
   background-color: ${({ variant }) =>
     variant === "primary" ? "#0070f3" : "red"};
   color: white;
@@ -21,29 +27,25 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const Text = styled.span`
+const Text = styled.span<{ isFinished: boolean }>`
   flex: 1;
   margin-right: 10px;
   text-decoration: ${({ isFinished }) => (isFinished ? "line-through" : "none")};
 `;
 
-const Task = ({ task }) => {
-  if (!task) {
-    return null;
-  }
+const Task: React.FC<TaskProps> = ({ task, onFinish, onRemove }) => {
+  const { removeTask, finishTask } = useTaskActions();
 
-  const { addTask, removeTask, finishTask } = useTaskActions();
+  
 
-  const handleAddTask = () => {
-    addTask('New task');
-  };
-
-  const handleRemoveTask = (taskId) => {
+  const handleRemoveTask = (taskId: string) => {
     removeTask(taskId);
+    onRemove(taskId);
   };
 
-  const handleFinishTask = (taskId) => {
+  const handleFinishTask = (taskId: string) => {
     finishTask(taskId);
+    onFinish(taskId);
   };
 
   return (
@@ -56,7 +58,6 @@ const Task = ({ task }) => {
           </Button>
         )}
         <Button onClick={() => handleRemoveTask(task.id)}>Remove</Button>
-        <Button onClick={handleAddTask}>Add Task</Button>
       </div>
     </Container>
   );

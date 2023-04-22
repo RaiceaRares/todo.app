@@ -2,18 +2,24 @@ import { useDispatch } from 'react-redux';
 import { useCallback } from 'react';
 import { addTask, removeTask, finishTask } from '../store/actions';
 
-const useTaskActions = () => {
+interface TaskActions {
+  addTask: (task: string) => void;
+  removeTask: (taskId: string) => void;
+  finishTask: (taskId: string) => void;
+}
+
+const useTaskActions = (): TaskActions => {
   const dispatch = useDispatch();
 
-  const handleAddTask = useCallback((task) => {
+  const handleAddTask = useCallback((task: string) => {
     dispatch(addTask(task));
   }, [dispatch]);
 
-  const handleRemoveTask = useCallback((taskId) => {
+  const handleRemoveTask = useCallback((taskId: string) => {
     dispatch(removeTask(taskId));
   }, [dispatch]);
 
-  const handleFinishTask = useCallback((taskId) => {
+  const handleFinishTask = useCallback((taskId: string) => {
     dispatch(finishTask(taskId));
   }, [dispatch]);
 

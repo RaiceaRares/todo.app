@@ -1,7 +1,13 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { completeTask, removeTask } from '../store/actions';
+import { finishTask, removeTask } from '../store/actions';
+
+interface TaskItemProps {
+  id: string;
+  text: string;
+  isCompleted: boolean;
+}
 
 const TaskItemContainer = styled.div`
   display: flex;
@@ -13,7 +19,7 @@ const TaskItemContainer = styled.div`
   margin-bottom: 8px;
 `;
 
-const TaskText = styled.p`
+const TaskText = styled.p<{ isCompleted: boolean }>`
   margin: 0;
   flex-grow: 1;
   text-decoration: ${({ isCompleted }) => (isCompleted ? 'line-through' : 'none')};
@@ -23,11 +29,11 @@ const Button = styled.button`
   margin-left: 8px;
 `;
 
-function TaskItem({ id, text, isCompleted }) {
+const TaskItem: React.FC<TaskItemProps> = ({ id, text, isCompleted }) => {
   const dispatch = useDispatch();
 
   const handleComplete = () => {
-    dispatch(completeTask(id));
+    dispatch(finishTask(id));
   };
 
   const handleRemove = () => {
@@ -49,6 +55,6 @@ function TaskItem({ id, text, isCompleted }) {
       </div>
     </TaskItemContainer>
   );
-}
+};
 
 export default TaskItem;
