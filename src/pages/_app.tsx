@@ -20,7 +20,7 @@ function App(): JSX.Element {
   return (
     <Provider store={store}>
       <GlobalStyle />
-      <Todo/>
+      <Todo title={''} description={''}/>
     </Provider>
   );
 }

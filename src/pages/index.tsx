@@ -2,8 +2,9 @@ import Head from "next/head";
 import styled from "styled-components";
 import useTaskActions from '../hooks/useTaskActions';
 import TaskForm from "../components/TaskForm";
-import Task  from '../components/TaskList';
-import React, { useState } from 'react';
+import Task from '../components/TaskList';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const Container = styled.div`
   max-width: 800px;
@@ -15,17 +16,30 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-const Todo = () => {
+type TodoProps = {
+  title: string;
+  description: string;
+};
+
+const Todo = ({ title, description }: TodoProps) => {
   const { addTask, removeTask, finishTask } = useTaskActions();
   const [tasks, setTasks] = useState<TaskProps[]>([]);
 
-  const handleAddTask = (text: string) => {
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
+      setTasks(response.data);
+    };
+    fetchTasks();
+  }, []);
+
+  const handleAddTask = async (text: string) => {
     const newTask = { id: `${Date.now()}`, text, isFinished: false };
     setTasks([...tasks, newTask]);
-    addTask(text); 
+    addTask(text);
   };
 
-  const handleFinishTask = (taskId: string) => {
+  const handleFinishTask = async (taskId: string) => {
     const updatedTasks = tasks.map(task => {
       if (task.id === taskId) {
         return { ...task, isFinished: true };
@@ -34,23 +48,24 @@ const Todo = () => {
       }
     });
     setTasks(updatedTasks);
-    finishTask(taskId); 
+    finishTask(taskId);
   };
 
-  const handleRemoveTask = (taskId: string) => {
+  const handleRemoveTask = async (taskId: string) => {
     const updatedTasks = tasks.filter(task => task.id !== taskId);
     setTasks(updatedTasks);
-    removeTask(taskId); 
+    removeTask(taskId);
   };
 
   return (
     <Container>
       <Head>
-        <title>Todo App</title>
+        <title>{title}</title>
+        <meta name="description" content={description} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Title>My Todo List</Title>
-      <TaskForm onAddTask={handleAddTask}/>
+      <TaskForm onAddTask={handleAddTask} />
       {tasks.map(task => (
         <Task
           key={task.id}
