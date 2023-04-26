@@ -1,4 +1,5 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import useTaskActions from "../hooks/useTaskActions";
 import styled from "styled-components";
 import { TaskProps } from "./TaskProps";
@@ -33,10 +34,21 @@ const Text = styled.span<{ isFinished: boolean }>`
   text-decoration: ${({ isFinished }) => (isFinished ? "line-through" : "none")};
 `;
 
-const Task: React.FC<TaskProps> = ({ task, onFinish, onRemove }) => {
+const TaskList: React.FC<TaskProps> = ({ onFinish, onRemove }) => {
   const { removeTask, finishTask } = useTaskActions();
+  const [tasks, setTasks] = useState([]);
 
-  
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get('/api/todos');
+        setTasks(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchTasks();
+  }, []);
 
   const handleRemoveTask = (taskId: string) => {
     removeTask(taskId);
@@ -49,18 +61,22 @@ const Task: React.FC<TaskProps> = ({ task, onFinish, onRemove }) => {
   };
 
   return (
-    <Container>
-      <Text isFinished={task.isFinished}>{task.text}</Text>
-      <div>
-        {!task.isFinished && (
-          <Button variant="primary" onClick={() => handleFinishTask(task.id)}>
-            Done
-          </Button>
-        )}
-        <Button onClick={() => handleRemoveTask(task.id)}>Remove</Button>
-      </div>
-    </Container>
+    <>
+      {tasks.map((task) => (
+        <Container key={task.id}>
+          <Text isFinished={task.finished}>{task.task}</Text>
+          <div>
+            {!task.finished && (
+              <Button variant="primary" onClick={() => handleFinishTask(task.id.toString())}>
+                Done
+              </Button>
+            )}
+            <Button onClick={() => handleRemoveTask(task.id.toString())}>Remove</Button>
+          </div>
+        </Container>
+      ))}
+    </>
   );
 };
 
-export default Task;
+export default TaskList;

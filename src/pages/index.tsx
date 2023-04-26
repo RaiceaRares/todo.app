@@ -2,7 +2,7 @@ import Head from "next/head";
 import styled from "styled-components";
 import useTaskActions from '../hooks/useTaskActions';
 import TaskForm from "../components/TaskForm";
-import Task from '../components/TaskList';
+import TaskList, { TaskProps } from '../components/TaskList';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -27,8 +27,17 @@ const Todo = ({ title, description }: TodoProps) => {
 
   useEffect(() => {
     const fetchTasks = async () => {
+      try {
       const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
-      setTasks(response.data);
+      const fetchedTasks = response.data.map((task: any) => ({
+        id: task.id,
+        text: task.title,
+        isFinished: task.completed
+      }));
+      setTasks(fetchedTasks);
+    } catch (error) {
+      console.log(error);
+    }
     };
     fetchTasks();
   }, []);
@@ -67,7 +76,7 @@ const Todo = ({ title, description }: TodoProps) => {
       <Title>My Todo List</Title>
       <TaskForm onAddTask={handleAddTask} />
       {tasks.map(task => (
-        <Task
+        <TaskList
           key={task.id}
           task={task}
           onFinish={handleFinishTask}

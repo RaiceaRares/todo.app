@@ -36,6 +36,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
     event.preventDefault();
     if (taskText.trim() === "") return;
     onAddTask(taskText);
+    console.log("onAddTask called with", taskText)
     setTaskText("");
   };
 
